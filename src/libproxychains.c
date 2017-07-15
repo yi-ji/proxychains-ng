@@ -45,6 +45,8 @@
 #define     SOCKFAMILY(x)     (satosin(x)->sin_family)
 #define     MAX_CHAIN 512
 
+#define TEST_MAC_APPS 1
+
 close_t true_close;
 connect_t true_connect;
 gethostbyname_t true_gethostbyname;
@@ -107,7 +109,9 @@ static void setup_hooks(void) {
 	SETUP_SYM(freeaddrinfo);
 	SETUP_SYM(gethostbyaddr);
 	SETUP_SYM(getnameinfo);
+#ifndef TEST_MAC_APPS
 	SETUP_SYM(close);
+#endif
 }
 
 static int close_fds[16];
@@ -126,7 +130,9 @@ static void do_init(void) {
 
 	setup_hooks();
 
+#ifndef TEST_MAC_APPS
 	while(close_fds_cnt) true_close(close_fds[--close_fds_cnt]);
+#endif
 
 	init_l = 1;
 }
@@ -312,6 +318,7 @@ static void get_chain_data(proxy_data * pd, unsigned int *proxy_count, chain_typ
 
 /*******  HOOK FUNCTIONS  *******/
 
+#ifndef TEST_MAC_APPS
 int close(int fd) {
 	if(!init_l) {
 		if(close_fds_cnt>=(sizeof close_fds/sizeof close_fds[0])) goto err;
@@ -328,6 +335,7 @@ int close(int fd) {
 	errno = EBADF;
 	return -1;
 }
+#endif
 static int is_v4inv6(const struct in6_addr *a) {
 	return a->s6_addr32[0] == 0 && a->s6_addr32[1] == 0 &&
 	       a->s6_addr16[4] == 0 && a->s6_addr16[5] == 0xffff;
