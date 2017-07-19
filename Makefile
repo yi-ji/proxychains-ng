@@ -22,6 +22,7 @@ LOBJS = src/nameinfo.o src/version.o \
 
 GENH = src/version.h
 
+CPPFLAGS += -DDEBUG
 CFLAGS  += -Wall -O0 -g -std=c99 -D_GNU_SOURCE -pipe
 NO_AS_NEEDED = -Wl,--no-as-needed
 LIBDL   = -ldl

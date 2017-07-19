@@ -45,7 +45,7 @@
 #define     SOCKFAMILY(x)     (satosin(x)->sin_family)
 #define     MAX_CHAIN 512
 
-#define TEST_MAC_APPS 1
+// #define TEST_MAC_APPS 1
 
 close_t true_close;
 connect_t true_connect;
@@ -357,8 +357,11 @@ int connect(int sock, const struct sockaddr *addr, unsigned int len) {
 	optlen = sizeof(socktype);
 	sa_family_t fam = SOCKFAMILY(*addr);
 	getsockopt(sock, SOL_SOCKET, SO_TYPE, &socktype, &optlen);
-	if(!((fam  == AF_INET || fam == AF_INET6) && socktype == SOCK_STREAM))
-		return true_connect(sock, addr, len);
+	// if(!((fam  == AF_INET || fam == AF_INET6) && socktype == SOCK_STREAM))
+	// 	return true_connect(sock, addr, len);
+	PDEBUG("fam %s= AF_INET, ", fam  == AF_INET ? "=" : "!");
+	PDEBUG("fam %s= AF_INET6, ", fam  == AF_INET6 ? "=" : "!");
+	PDEBUG("socktype is %d %s= SOCK_STREAM\n", socktype, socktype == SOCK_STREAM ? "=" : "!");
 
 	int v6 = dest_ip.is_v6 = fam == AF_INET6;
 
